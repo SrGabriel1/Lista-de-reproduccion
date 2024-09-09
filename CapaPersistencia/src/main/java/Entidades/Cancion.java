@@ -13,22 +13,25 @@ import java.util.List;
  */
 public class Cancion {
 
-    String nombreCancion;
-    Artista artista;
-    
-    List<String> direccion;
+    private String nombreCancion;
+    private Artista artista;
+    private int duracion;
+    private String direccion;
 
     /**
      * Constructor donde se inicializan las variables de la clase
      *
-     * @param nombreCancion nombre de la cancion
-     * @param artista artista que creo la cancion
+     * @param nombreCancion nombre de la canción
+     * @param artista artista que creó la canción
+     * @param duracion segundos de la duración de la canción
+     * @param direccion representa la direccion donde se encuentra el archivo de
+     * la cancion
      */
-    public Cancion(String nombreCancion, Artista artista) {
+    public Cancion(String nombreCancion, Artista artista, int duracion, String direccion) {
         this.nombreCancion = nombreCancion;
         this.artista = artista;
-        this.direccion = new ArrayList<>(); 
-
+        this.duracion = duracion;
+        this.direccion = direccion;
     }
 
     /**
@@ -68,21 +71,50 @@ public class Cancion {
     }
 
     /**
-     * Metodo para obtener una lista con la direccion de las canciones guardadas
+     * Método para obtener la duración en segundos
      *
-     * @return lista con la direccion de las canciones
+     * @return duración en segundos
      */
-    public List<String> getListaLink() {
+    public int getDuracion() {
+        return duracion;
+    }
+
+    /**
+     * Método para guardar la duración en segundos
+     *
+     * @param duracion duración en segundos
+     */
+    public void setDuracion(int duracion) {
+        this.duracion = duracion;
+    }
+
+    /**
+     * Método para obtener la dirección del archivo
+     *
+     * @return diracción del archivo de la canción
+     */
+    public String getDireccion() {
         return direccion;
     }
 
     /**
-     * Metodo para guardar la direccion de una cancion
+     * Método para guardar la direccion en la cual se encuentra el archivo
      *
-     * @param direccion direccion de la cancion
+     * @param direccion direccion del archivo
      */
-    public void setListaLink(String direccion) {
-        this.direccion.add(direccion);
+    public void setDireccion(String direccion) {
+        this.direccion = direccion;
+    }
+
+    /**
+     * Método que retorna la duración formateada en minutos y segundos
+     *
+     * @return duración formateada en formato mm:ss
+     */
+    public String getDuracionFormateada() {
+        int minutos = duracion / 60;
+        int segundos = duracion % 60;
+        return String.format("%02d:%02d", minutos, segundos);
     }
 
 }

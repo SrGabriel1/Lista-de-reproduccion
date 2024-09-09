@@ -13,8 +13,8 @@ import java.util.List;
  */
 public class ListaReproduccion {
 
-    List<Cancion> listaMusica;
-    String nombreLista;
+    private List<Cancion> listaMusica;
+    private String nombreLista;
 
     /**
      * Constructor donde se inicializan las variables de la clase
@@ -23,7 +23,7 @@ public class ListaReproduccion {
      */
     public ListaReproduccion(String nombreLista) {
         this.nombreLista = nombreLista;
-        this.listaMusica = new ArrayList<>(); 
+        this.listaMusica = new ArrayList<>();
     }
 
     /**

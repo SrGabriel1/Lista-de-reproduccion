@@ -14,12 +14,26 @@ import java.util.List;
 public class Usuario {
 
     private List<ListaReproduccion> listaReproduccion;
+    private String username;
+    private String contraseña;
 
     /**
      * Constructor donde se inicializan las variables de la clase
      *
      */
     public Usuario() {
+        this.listaReproduccion = new ArrayList<>();
+    }
+
+    /**
+     * Constructor donde se inicializan las variables de la clase
+     *
+     * @param username nombre de usuario
+     * @param contraseña contraseña del usuario
+     */
+    public Usuario(String username, String contraseña) {
+        this.username = username;
+        this.contraseña = contraseña;
         this.listaReproduccion = new ArrayList<>();
     }
 
@@ -41,4 +55,39 @@ public class Usuario {
         listaReproduccion.add(lista);
     }
 
+    /**
+     * Método para obtener el nombre de usuario
+     *
+     * @return nombre de usuario
+     */
+    public String getUsername() {
+        return username;
+    }
+
+    /**
+     * Método para establecer el nombre de usuario
+     *
+     * @param username nombre de usuario
+     */
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    /**
+     * Método para obtener la contraseña del usuario
+     *
+     * @return contraseña
+     */
+    public String getContraseña() {
+        return contraseña;
+    }
+
+    /**
+     * Método para establecer la contraseña del usuario
+     *
+     * @param contraseña contraseña del usuario
+     */
+    public void setContraseña(String contraseña) {
+        this.contraseña = contraseña;
+    }
 }

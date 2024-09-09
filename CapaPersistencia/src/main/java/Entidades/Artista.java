@@ -12,8 +12,8 @@ import java.util.List;
  */
 public class Artista {
 
-    String nombre;
-    List<Cancion> listaMusica;
+    private String nombre;
+    private List<Cancion> listaMusica;
 
     /**
      * Metodo que crea una variable de nombre del artista
