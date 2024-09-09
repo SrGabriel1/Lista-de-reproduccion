@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package Persistencia;
+package Entidades;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,10 +11,11 @@ import java.util.List;
  *
  * @author Gabriel
  */
-public class Musica {
+public class Cancion {
 
     String nombreCancion;
     Artista artista;
+    
     List<String> direccion;
 
     /**
@@ -23,7 +24,7 @@ public class Musica {
      * @param nombreCancion nombre de la cancion
      * @param artista artista que creo la cancion
      */
-    public Musica(String nombreCancion, Artista artista) {
+    public Cancion(String nombreCancion, Artista artista) {
         this.nombreCancion = nombreCancion;
         this.artista = artista;
         this.direccion = new ArrayList<>(); 

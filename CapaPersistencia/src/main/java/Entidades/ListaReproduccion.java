@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package Persistencia;
+package Entidades;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,7 +13,7 @@ import java.util.List;
  */
 public class ListaReproduccion {
 
-    List<Musica> listaMusica;
+    List<Cancion> listaMusica;
     String nombreLista;
 
     /**
@@ -31,7 +31,7 @@ public class ListaReproduccion {
      *
      * @return lista de musica requerida
      */
-    public List<Musica> getListaMusica() {
+    public List<Cancion> getListaMusica() {
         return listaMusica;
     }
 
@@ -40,7 +40,7 @@ public class ListaReproduccion {
      *
      * @param listaMusica lista de musica que se desea guardar
      */
-    public void setListaMusica(List<Musica> listaMusica) {
+    public void setListaMusica(List<Cancion> listaMusica) {
         this.listaMusica = listaMusica;
     }
 
