@@ -6,6 +6,7 @@ package pruebas;
 
 import daos.CancionDAO;
 import entidades.Cancion;
+import java.io.FileNotFoundException;
 import java.util.Arrays;
 import java.util.List;
 import listamusicalnegocio.ReproductorBO;
@@ -16,7 +17,7 @@ import listamusicalnegocio.ReproductorBO;
  */
 public class pruebas {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws FileNotFoundException {
         // Crear algunas canciones de ejemplo
         CancionDAO cancion = new CancionDAO();
    
@@ -25,10 +26,9 @@ public class pruebas {
 //            System.out.println(c.getNombreCancion());
 //            System.out.println(c.getDireccion());
 //        }
-        // Crear el reproductor
-        ReproductorBO reproductor = new ReproductorBO(listaCanciones);
+     ReproductorBO reproductor = new ReproductorBO(listaCanciones);
 
-//         Reproducir la primera canción
+        // Reproducir primera canción
         reproductor.reproducir();
 
         // Pausar la canción
