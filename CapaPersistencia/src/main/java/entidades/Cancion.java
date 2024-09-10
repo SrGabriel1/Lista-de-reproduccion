@@ -14,8 +14,6 @@ import java.util.List;
 public class Cancion {
 
     private String nombreCancion;
-    private Artista artista;
-    private int duracion;
     private String direccion;
 
     /**
@@ -27,30 +25,13 @@ public class Cancion {
      * @param direccion representa la direccion donde se encuentra el archivo de
      * la cancion
      */
-    public Cancion(String nombreCancion, Artista artista, int duracion, String direccion) {
+    public Cancion(String nombreCancion,  String direccion) {
         this.nombreCancion = nombreCancion;
-        this.artista = artista;
-        this.duracion = duracion;
         this.direccion = direccion;
     }
 
-    /**
-     * Metodo para mostrar el artista
-     *
-     * @return regresa el artista deseado
-     */
-    public Artista getArtista() {
-        return artista;
-    }
+ 
 
-    /**
-     * Metodo que guarda el artista
-     *
-     * @param artista artista que se desea guardar
-     */
-    public void setArtista(Artista artista) {
-        this.artista = artista;
-    }
 
     /**
      * Metodo para el nombre de la cancion
@@ -71,24 +52,6 @@ public class Cancion {
     }
 
     /**
-     * Método para obtener la duración en segundos
-     *
-     * @return duración en segundos
-     */
-    public int getDuracion() {
-        return duracion;
-    }
-
-    /**
-     * Método para guardar la duración en segundos
-     *
-     * @param duracion duración en segundos
-     */
-    public void setDuracion(int duracion) {
-        this.duracion = duracion;
-    }
-
-    /**
      * Método para obtener la dirección del archivo
      *
      * @return diracción del archivo de la canción
@@ -106,15 +69,5 @@ public class Cancion {
         this.direccion = direccion;
     }
 
-    /**
-     * Método que retorna la duración formateada en minutos y segundos
-     *
-     * @return duración formateada en formato mm:ss
-     */
-    public String getDuracionFormateada() {
-        int minutos = duracion / 60;
-        int segundos = duracion % 60;
-        return String.format("%02d:%02d", minutos, segundos);
-    }
 
 }

@@ -16,7 +16,14 @@ import java.util.List;
  */
 public class ListaReproduccionDAO implements IListaReproduccion {
 
-    private List<ListaReproduccion> listasDeReproduccion = new ArrayList<>();
+    private List<ListaReproduccion> listasDeReproduccion;
+
+    public ListaReproduccionDAO() {
+        listasDeReproduccion = new ArrayList<>();
+            
+    }
+    
+    
 
     /**
      * {@inheritDoc}
