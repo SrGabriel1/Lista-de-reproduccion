@@ -21,9 +21,7 @@ public class ReproductorBO {
     private long pauseLocation = 0;
     private long songTotalLength = 0;
     private Thread hiloReproduccion;
-
     private int framePosition = 0;
-
 
     public ReproductorBO(List<Cancion> listaCanciones) {
         this.listaCanciones = listaCanciones;
@@ -31,15 +29,7 @@ public class ReproductorBO {
 
     public void reproducir() throws FileNotFoundException, JavaLayerException, IOException {
         if (enPausa) {
-
             resumirCancion();
-
-            // Si está en pausa, solo resume la reproducción
-            enPausa = false;
-            synchronized (hiloReproduccion) {
-                hiloReproduccion.notify();
-            }
-
         } else {
             reproducirCancion(indiceActual);
         }
@@ -58,7 +48,6 @@ public class ReproductorBO {
                     framePosition = evt.getFrame();
                 }
             });
-
 
             hiloReproduccion = new Thread(() -> {
                 try {
@@ -82,29 +71,6 @@ public class ReproductorBO {
             } catch (Exception e) {
                 System.out.println("Error al pausar: " + e.getMessage());
             }
-
-                // Correr en un hilo separado para permitir controlar la reproducción
-                hiloReproduccion = new Thread(() -> {
-                    try {
-                        player.play();
-                    } catch (JavaLayerException e) {
-                        System.out.println("Error al reproducir: " + e.getMessage());
-                    }
-                });
-                hiloReproduccion.start();
-
-            } catch (JavaLayerException e) {
-                System.out.println("Error al cargar el archivo MP3: " + e.getMessage());
-            }
-        }
-    }
-
-    // Método para pausar la canción
-    public void pausar() {
-        if (hiloReproduccion != null && player != null) {
-            enPausa = true;
-            hiloReproduccion.suspend();
-
         }
     }
 
@@ -135,7 +101,6 @@ public class ReproductorBO {
     public void detener() {
         if (player != null) {
             player.close();
-
             enPausa = false;
             try {
                 if (archivo != null) {
@@ -144,7 +109,6 @@ public class ReproductorBO {
             } catch (Exception e) {
                 System.out.println("Error al cerrar el archivo: " + e.getMessage());
             }
-
         }
     }
 

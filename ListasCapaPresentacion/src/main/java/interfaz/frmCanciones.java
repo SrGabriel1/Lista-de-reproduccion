@@ -47,7 +47,6 @@ public class frmCanciones extends javax.swing.JFrame {
         panelRound1 = new com.mycompany.listascapapresentacion.PanelRound();
         jScrollPane1 = new javax.swing.JScrollPane();
         listaCanciones = new javax.swing.JList<>();
-        buscarCanciones = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Agregar canciones");
@@ -105,19 +104,6 @@ public class frmCanciones extends javax.swing.JFrame {
                 .addGap(24, 24, 24))
         );
 
-        buscarCanciones.setBackground(new java.awt.Color(255, 255, 255));
-        buscarCanciones.setForeground(new java.awt.Color(0, 0, 0));
-        buscarCanciones.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                buscarCancionesActionPerformed(evt);
-            }
-        });
-        buscarCanciones.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyReleased(java.awt.event.KeyEvent evt) {
-                buscarCancionesKeyReleased(evt);
-            }
-        });
-
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -131,20 +117,14 @@ public class frmCanciones extends javax.swing.JFrame {
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(btnAceptar, javax.swing.GroupLayout.DEFAULT_SIZE, 115, Short.MAX_VALUE)
                             .addComponent(btnAgregar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(buscarCanciones, javax.swing.GroupLayout.PREFERRED_SIZE, 279, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel1))
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                    .addComponent(jLabel1))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addComponent(jLabel1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 14, Short.MAX_VALUE)
-                .addComponent(buscarCanciones, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 54, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                         .addComponent(btnAgregar)
@@ -217,29 +197,6 @@ public class frmCanciones extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_btnAgregarActionPerformed
 
-    private void buscarCancionesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buscarCancionesActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_buscarCancionesActionPerformed
-
-    private void buscarCancionesKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_buscarCancionesKeyReleased
-        String query = buscarCanciones.getText().trim();
-    
-    try {
-        List<Cancion> listaCancionesData;
-        
-        if (query.isEmpty()) {
-            listaCancionesData = canciones.obtenerCanciones();
-        } else {
-            listaCancionesData = canciones.buscarCancion(query);
-        }
-        CancionesListModel listModel = new CancionesListModel(listaCancionesData);
-        listaCanciones.setModel(listModel);
-        
-    } catch (Exception ex) {
-        Logger.getLogger(frmCanciones.class.getName()).log(Level.SEVERE, null, ex);
-    }
-    }//GEN-LAST:event_buscarCancionesKeyReleased
-
     /**
      * @param args the command line arguments
      */
@@ -278,7 +235,6 @@ public class frmCanciones extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAceptar;
     private javax.swing.JButton btnAgregar;
-    private javax.swing.JTextField buscarCanciones;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
