@@ -219,6 +219,10 @@ public class frmPlaylist extends javax.swing.JFrame {
     }
 
     private void btnAgregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarActionPerformed
+        if (estaReproduciendo) {
+            reproductor.detener(); 
+            estaReproduciendo = false; 
+        }
         control.mostrarFrmCanciones();
         this.dispose();
     }//GEN-LAST:event_btnAgregarActionPerformed
@@ -278,28 +282,20 @@ public class frmPlaylist extends javax.swing.JFrame {
     }//GEN-LAST:event_btnReproducir1ActionPerformed
 
     private void btnSigActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSigActionPerformed
-        if (estaReproduciendo != false) {
+        if (estaReproduciendo) {
             try {
                 reproductor.siguiente();
-            } catch (FileNotFoundException ex) {
-                Logger.getLogger(frmPlaylist.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (JavaLayerException ex) {
-                Logger.getLogger(frmPlaylist.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (IOException ex) {
+            } catch (IOException | JavaLayerException ex) {
                 Logger.getLogger(frmPlaylist.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
     }//GEN-LAST:event_btnSigActionPerformed
 
     private void btnAnteriorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAnteriorActionPerformed
-        if (estaReproduciendo != false) {
+        if (estaReproduciendo) {
             try {
                 reproductor.anterior();
-            } catch (FileNotFoundException ex) {
-                Logger.getLogger(frmPlaylist.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (JavaLayerException ex) {
-                Logger.getLogger(frmPlaylist.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (IOException ex) {
+            } catch (IOException | JavaLayerException ex) {
                 Logger.getLogger(frmPlaylist.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
