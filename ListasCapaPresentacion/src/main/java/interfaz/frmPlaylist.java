@@ -5,13 +5,11 @@ import entidades.Cancion;
 import entidades.ListaReproduccion;
 import extras.CancionesListModel;
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
-import javazoom.jl.decoder.JavaLayerException;
 import listamusicalnegocio.IReproductorBO;
 import listamusicalnegocio.ListaReproduccionBO;
 import listamusicalnegocio.ReproductorBO;
@@ -32,8 +30,8 @@ public class frmPlaylist extends javax.swing.JFrame {
      */
     public frmPlaylist() {
         initComponents();
+
         this.control = ControlListaReproduccion.getInstancia();
-        this.reproductor = new ReproductorBO(control.getListaRep().getListaMusica());
         this.lista = control.getListaRep();
         nombreListatxt.setText(lista.getNombreLista());
 
@@ -254,27 +252,19 @@ public class frmPlaylist extends javax.swing.JFrame {
 
     private void btnReproducir1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReproducir1ActionPerformed
         if (!estaReproduciendo) {
-            // Inicializa el reproductor si no está en reproducción
+
+            reproductor = new ReproductorBO(control.getListaRep().getListaMusica());
             try {
                 reproductor.reproducir();
-                estaReproduciendo = true; // Actualiza el estado de reproducción
+                estaReproduciendo = true;
             } catch (FileNotFoundException ex) {
-                Logger.getLogger(frmPlaylist.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (JavaLayerException ex) {
-                Logger.getLogger(frmPlaylist.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (IOException ex) {
                 Logger.getLogger(frmPlaylist.class.getName()).log(Level.SEVERE, null, ex);
             }
         } else {
-            // Pausa la reproducción si ya está en reproducción
-            try {
-                reproductor.pausar();
-                estaReproduciendo = false; // Actualiza el estado de pausa
-            } catch (IOException ex) {
-                Logger.getLogger(frmPlaylist.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
 
+            reproductor.pausar();
+            estaReproduciendo = false;
+        }
     }//GEN-LAST:event_btnReproducir1ActionPerformed
 
     private void btnSigActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSigActionPerformed
@@ -282,10 +272,6 @@ public class frmPlaylist extends javax.swing.JFrame {
             try {
                 reproductor.siguiente();
             } catch (FileNotFoundException ex) {
-                Logger.getLogger(frmPlaylist.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (JavaLayerException ex) {
-                Logger.getLogger(frmPlaylist.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (IOException ex) {
                 Logger.getLogger(frmPlaylist.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
@@ -296,10 +282,6 @@ public class frmPlaylist extends javax.swing.JFrame {
             try {
                 reproductor.anterior();
             } catch (FileNotFoundException ex) {
-                Logger.getLogger(frmPlaylist.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (JavaLayerException ex) {
-                Logger.getLogger(frmPlaylist.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (IOException ex) {
                 Logger.getLogger(frmPlaylist.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
