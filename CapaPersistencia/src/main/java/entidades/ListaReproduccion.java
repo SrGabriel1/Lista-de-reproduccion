@@ -16,6 +16,12 @@ public class ListaReproduccion {
     private List<Cancion> listaMusica;
     private String nombreLista;
 
+    public ListaReproduccion() {
+        this.listaMusica = new ArrayList<>();
+    }
+
+    
+    
     /**
      * Constructor donde se inicializan las variables de la clase
      *

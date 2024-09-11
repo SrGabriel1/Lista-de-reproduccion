@@ -1,9 +1,15 @@
 package interfaz;
 
+import control.ControlListaReproduccion;
+import entidades.ListaReproduccion;
 import java.awt.Color;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
+import listamusicalnegocio.IListaReproduccionBO;
+import listamusicalnegocio.ListaReproduccionBO;
 
 /**
  *
@@ -11,14 +17,20 @@ import javax.swing.JOptionPane;
  */
 public class frmNuevaLista extends javax.swing.JFrame {
 
+    IListaReproduccionBO listaNueva;
+    ListaReproduccion lista;
+    ControlListaReproduccion control;
+
     /**
      * Creates new form frmNuevaLista
      */
     public frmNuevaLista() {
         initComponents();
-        
+        this.control = ControlListaReproduccion.getInstancia();
+        listaNueva = control.getListaBO();
+        lista = new ListaReproduccion();
         jPanel3.requestFocusInWindow();
-        
+
         txtNombre2.addFocusListener(new FocusListener() {
             @Override
             public void focusGained(FocusEvent e) {
@@ -32,7 +44,7 @@ public class frmNuevaLista extends javax.swing.JFrame {
             public void focusLost(FocusEvent e) {
                 if (txtNombre2.getText().isEmpty()) {
                     txtNombre2.setText("Ingresar nombre...");
-                    txtNombre2.setForeground(Color.GRAY); 
+                    txtNombre2.setForeground(Color.GRAY);
                 }
             }
         });
@@ -136,20 +148,27 @@ public class frmNuevaLista extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnCrear2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCrear2ActionPerformed
-        if(txtNombre2.getText().isEmpty() || txtNombre2.getText().equals("Ingresar nombre...")){
+        if (txtNombre2.getText().isEmpty() || txtNombre2.getText().equals("Ingresar nombre...")) {
             JOptionPane.showMessageDialog(this,
-                "Favor de ingresar un nombre", "Error", JOptionPane.ERROR_MESSAGE);
-        }else{
-            frmCanciones c = new frmCanciones();
-            c.setVisible(true);
-            this.dispose();
+                    "Favor de ingresar un nombre", "Error", JOptionPane.ERROR_MESSAGE);
+        } else {
+            lista.setNombreLista(txtNombre2.getText());
+            try {
+                listaNueva.crearListaReproduccion(lista);
+                control.setListaRep(lista);
+                control.setListaBO((ListaReproduccionBO) listaNueva);
+                control.mostrarPlaylist();
+                this.dispose();
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(this,
+                        ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            }
         }
     }//GEN-LAST:event_btnCrear2ActionPerformed
 
     private void btnCancelar2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelar2ActionPerformed
         this.dispose();
-        frmPrincipal p = new frmPrincipal();
-        p.setVisible(true);
+        control.mostrarMenu();
     }//GEN-LAST:event_btnCancelar2ActionPerformed
 
     private void txtNombre2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtNombre2ActionPerformed

@@ -24,6 +24,7 @@ public class ReproductorBO {
     private int indiceActual = 0;
     private boolean enPausa = false;
     private Thread hiloReproduccion;
+    private final Object lock = new Object();  // Objeto de bloqueo para pausar y reanudar
 
     // Constructor que recibe la lista de canciones
     public ReproductorBO(List<Cancion> listaCanciones) {
@@ -33,10 +34,10 @@ public class ReproductorBO {
     // Método para reproducir la canción actual
     public void reproducir() throws FileNotFoundException {
         if (enPausa) {
-            // Si está en pausa, solo resume la reproducción
+            // Si está en pausa, reanuda la reproducción
             enPausa = false;
-            synchronized (hiloReproduccion) {
-                hiloReproduccion.notify();
+            synchronized (lock) {
+                lock.notify();  // Reanuda el hilo
             }
         } else {
             reproducirCancion(indiceActual);
@@ -51,11 +52,16 @@ public class ReproductorBO {
                 FileInputStream archivo = new FileInputStream(cancion.getDireccion());
                 player = new Player(archivo);
 
-                // Correr en un hilo separado para permitir controlar la reproducción
+                // Hilo separado para la reproducción
                 hiloReproduccion = new Thread(() -> {
                     try {
-                        player.play();
-                    } catch (JavaLayerException e) {
+                        synchronized (lock) {
+                            while (!enPausa) {
+                                player.play();
+                                lock.wait();  // Pausar cuando sea necesario
+                            }
+                        }
+                    } catch (JavaLayerException | InterruptedException e) {
                         System.out.println("Error al reproducir: " + e.getMessage());
                     }
                 });
@@ -69,16 +75,18 @@ public class ReproductorBO {
 
     // Método para pausar la canción
     public void pausar() {
-        if (hiloReproduccion != null && player != null) {
+        if (player != null) {
             enPausa = true;
-            hiloReproduccion.suspend();
+            synchronized (lock) {
+                System.out.println("Reproducción pausada.");
+            }
         }
     }
 
     // Método para detener la canción
     public void detener() {
         if (player != null) {
-            player.close();
+            player.close();  // Detener la reproducción
         }
     }
 

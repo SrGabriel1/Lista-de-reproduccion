@@ -86,7 +86,7 @@ public class ListaReproduccionDAO implements IListaReproduccion {
      */
     @Override
     public List<ListaReproduccion> consultarListasRep() {
-        return new ArrayList<>(listasDeReproduccion);
+        return listasDeReproduccion;
     }
 
 }

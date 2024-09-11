@@ -14,7 +14,7 @@ import java.util.List;
  */
 public class CancionBO implements ICancionBO {
 
-    CancionDAO cancion;
+    private CancionDAO cancion;
     private String nombreCancion;
     private String direccion;
 
@@ -24,13 +24,15 @@ public class CancionBO implements ICancionBO {
      * @param cancion valores para iniciar la variable
      */
     public CancionBO(CancionDAO cancion) {
-        this.cancion = cancion;
+        this.cancion = new CancionDAO();
     }
 
     /**
      * Constructor vacio para incializar la clase
      */
     public CancionBO() {
+        this.cancion = new CancionDAO();
+
     }
 
     /**
@@ -123,10 +125,14 @@ public class CancionBO implements ICancionBO {
      */
     @Override
     public List<Cancion> obtenerCanciones() throws Exception {
-        if (cancion.obtenerCanciones() != null) {
-            return cancion.obtenerCanciones();
+        if (cancion == null) {
+            throw new Exception("CancionDAO no está inicializado");
+        }
+        List<Cancion> canciones = cancion.obtenerCanciones();
+        if (canciones != null) {
+            return canciones;
         } else {
-            throw new Exception("Lista de canciones vacia");
+            throw new Exception("Lista de canciones vacía");
         }
     }
 

@@ -1,16 +1,22 @@
 package interfaz;
 
+import control.ControlListaReproduccion;
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author adria
  */
 public class frmPrincipal extends javax.swing.JFrame {
 
+    ControlListaReproduccion control;
+
     /**
      * Creates new form frmPrincipal
      */
     public frmPrincipal() {
         initComponents();
+        this.control = ControlListaReproduccion.getInstancia();
     }
 
     /**
@@ -139,15 +145,23 @@ public class frmPrincipal extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnCrearListaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCrearListaActionPerformed
-        frmNuevaLista nueva = new frmNuevaLista();
-        nueva.setVisible(true);
+
+        control.mostrarFrmNuevaLista();
         this.dispose();
     }//GEN-LAST:event_btnCrearListaActionPerformed
 
     private void btnListasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnListasActionPerformed
-        frmListas listas = new frmListas();
-        listas.setVisible(true);
-        this.dispose();
+        if (control.getListaBO() != null) {
+            frmListas listas = new frmListas();
+            listas.setVisible(true);
+            this.dispose();
+        } else {
+            JOptionPane.showMessageDialog(this,
+                    " No hay playlist creadas bro",
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE);
+        }
+
     }//GEN-LAST:event_btnListasActionPerformed
 
     /**

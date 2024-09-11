@@ -1,16 +1,41 @@
 package interfaz;
 
+import control.ControlListaReproduccion;
+import entidades.Cancion;
+import entidades.ListaReproduccion;
+import extras.CancionesListModel;
+import java.io.FileNotFoundException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
+import listamusicalnegocio.IReproductorBO;
+import listamusicalnegocio.ListaReproduccionBO;
+import listamusicalnegocio.ReproductorBO;
+
 /**
  *
  * @author adria
  */
 public class frmPlaylist extends javax.swing.JFrame {
 
+    private ControlListaReproduccion control;
+    private ListaReproduccion lista;
+    private ReproductorBO reproductor;
+    private boolean estaReproduciendo = false;
+
     /**
      * Creates new form frmPlaylist
      */
     public frmPlaylist() {
         initComponents();
+
+        this.control = ControlListaReproduccion.getInstancia();
+        this.lista = control.getListaRep();
+        nombreListatxt.setText(lista.getNombreLista());
+
+        llenarTabla();
     }
 
     /**
@@ -26,13 +51,17 @@ public class frmPlaylist extends javax.swing.JFrame {
         btnAgregar = new javax.swing.JButton();
         btnEditar = new javax.swing.JButton();
         btnEliminar = new javax.swing.JButton();
-        btnReproducir = new javax.swing.JButton();
         panelRound1 = new com.mycompany.listascapapresentacion.PanelRound();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jList1 = new javax.swing.JList<>();
+        listaCanciones = new javax.swing.JList<>();
+        nombreListatxt = new javax.swing.JLabel();
+        btnReproducir1 = new javax.swing.JButton();
+        btnSig = new javax.swing.JButton();
+        btnAnterior = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setResizable(false);
+        getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jPanel1.setBackground(new java.awt.Color(127, 127, 127));
 
@@ -45,7 +74,7 @@ public class frmPlaylist extends javax.swing.JFrame {
         });
 
         btnEditar.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        btnEditar.setText("Editar");
+        btnEditar.setText("Regresar");
         btnEditar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnEditarActionPerformed(evt);
@@ -60,24 +89,14 @@ public class frmPlaylist extends javax.swing.JFrame {
             }
         });
 
-        btnReproducir.setBackground(new java.awt.Color(127, 127, 127));
-        btnReproducir.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/reproducir.png"))); // NOI18N
-        btnReproducir.setBorder(null);
-        btnReproducir.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-
         panelRound1.setBackground(new java.awt.Color(204, 204, 204));
         panelRound1.setRoundBottomLeft(10);
         panelRound1.setRoundBottomRight(10);
         panelRound1.setRoundTopLeft(10);
         panelRound1.setRoundTopRight(10);
 
-        jList1.setBackground(new java.awt.Color(204, 204, 204));
-        jList1.setModel(new javax.swing.AbstractListModel<String>() {
-            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
-            public int getSize() { return strings.length; }
-            public String getElementAt(int i) { return strings[i]; }
-        });
-        jScrollPane1.setViewportView(jList1);
+        listaCanciones.setBackground(new java.awt.Color(204, 204, 204));
+        jScrollPane1.setViewportView(listaCanciones);
 
         javax.swing.GroupLayout panelRound1Layout = new javax.swing.GroupLayout(panelRound1);
         panelRound1.setLayout(panelRound1Layout);
@@ -96,66 +115,177 @@ public class frmPlaylist extends javax.swing.JFrame {
                 .addContainerGap(15, Short.MAX_VALUE))
         );
 
+        nombreListatxt.setFont(new java.awt.Font("Segoe UI", 3, 14)); // NOI18N
+        nombreListatxt.setForeground(new java.awt.Color(51, 51, 51));
+
+        btnReproducir1.setBackground(new java.awt.Color(127, 127, 127));
+        btnReproducir1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/reproducir.png"))); // NOI18N
+        btnReproducir1.setBorder(null);
+        btnReproducir1.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnReproducir1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnReproducir1ActionPerformed(evt);
+            }
+        });
+
+        btnSig.setBackground(new java.awt.Color(127, 127, 127));
+        btnSig.setIcon(new javax.swing.ImageIcon(getClass().getResource("/boton-de-pista-siguiente.png"))); // NOI18N
+        btnSig.setBorder(null);
+        btnSig.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnSig.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSigActionPerformed(evt);
+            }
+        });
+
+        btnAnterior.setBackground(new java.awt.Color(127, 127, 127));
+        btnAnterior.setIcon(new javax.swing.ImageIcon(getClass().getResource("/boton-de-pista-anterior.png"))); // NOI18N
+        btnAnterior.setBorder(null);
+        btnAnterior.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnAnterior.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAnteriorActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(46, 46, 46)
-                .addComponent(btnAgregar)
                 .addGap(35, 35, 35)
-                .addComponent(btnEditar, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(32, 32, 32)
-                .addComponent(btnEliminar)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(36, 36, 36)
-                .addComponent(panelRound1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 73, Short.MAX_VALUE)
-                .addComponent(btnReproducir, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(70, 70, 70))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(panelRound1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(26, 26, 26)
+                        .addComponent(btnAnterior, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(btnReproducir1, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(jPanel1Layout.createSequentialGroup()
+                            .addComponent(btnEditar, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGap(18, 18, 18)
+                            .addComponent(btnAgregar, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGap(18, 18, 18)
+                            .addComponent(btnEliminar, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(nombreListatxt, javax.swing.GroupLayout.PREFERRED_SIZE, 522, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(btnSig, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(28, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(26, 26, 26)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(btnReproducir, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(panelRound1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
+                .addGap(12, 12, 12)
+                .addComponent(nombreListatxt, javax.swing.GroupLayout.DEFAULT_SIZE, 21, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 11, Short.MAX_VALUE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addComponent(panelRound1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(btnSig, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btnReproducir1, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btnAnterior, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(58, 58, 58)))
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnAgregar)
-                    .addComponent(btnEliminar)
-                    .addComponent(btnEditar))
-                .addContainerGap(21, Short.MAX_VALUE))
+                    .addComponent(btnEditar)
+                    .addComponent(btnEliminar))
+                .addContainerGap())
         );
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-        );
+        getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, -1));
 
         pack();
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
+    private void llenarTabla() {
+        try {
+            List<Cancion> listaCancionesData = lista.getListaMusica();
+            if (listaCancionesData == null) {
+                listaCancionesData = new ArrayList<>();
+            }
+            CancionesListModel listModel = new CancionesListModel(listaCancionesData);
+
+            listaCanciones.setModel(listModel);
+        } catch (Exception ex) {
+            Logger.getLogger(frmCanciones.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
     private void btnAgregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarActionPerformed
-        // TODO add your handling code here:
+        control.mostrarFrmCanciones();
+        this.dispose();
     }//GEN-LAST:event_btnAgregarActionPerformed
 
     private void btnEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditarActionPerformed
-        // TODO add your handling code here:
+        control.mostrarMenu();
+        this.dispose();
     }//GEN-LAST:event_btnEditarActionPerformed
 
     private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarActionPerformed
-        // TODO add your handling code here:
+        int selectedIndex = listaCanciones.getSelectedIndex();
+
+        if (selectedIndex != -1) {
+            CancionesListModel listModel = (CancionesListModel) listaCanciones.getModel();
+
+            Cancion cancionSeleccionada = listModel.getCancionAt(selectedIndex);
+            ListaReproduccion actualLista = control.getListaRep();
+            try {
+                control.getListaBO().eliminarCancion(actualLista.getNombreLista(), cancionSeleccionada);
+                llenarTabla();
+
+                JOptionPane.showMessageDialog(this, "Canción eliminada correctamente.");
+            } catch (Exception ex) {
+
+                Logger.getLogger(frmPlaylist.class.getName()).log(Level.SEVERE, null, ex);
+                JOptionPane.showMessageDialog(this, "Error al eliminar la canción: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        } else {
+
+            JOptionPane.showMessageDialog(this, "Por favor, seleccione una canción para eliminar.", "Advertencia", JOptionPane.WARNING_MESSAGE);
+        }
     }//GEN-LAST:event_btnEliminarActionPerformed
+
+    private void btnReproducir1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReproducir1ActionPerformed
+        if (!estaReproduciendo) {
+
+            reproductor = new ReproductorBO(control.getListaRep().getListaMusica());
+            try {
+                reproductor.reproducir();
+                estaReproduciendo = true;
+            } catch (FileNotFoundException ex) {
+                Logger.getLogger(frmPlaylist.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        } else {
+
+            reproductor.pausar();
+            estaReproduciendo = false;
+        }
+    }//GEN-LAST:event_btnReproducir1ActionPerformed
+
+    private void btnSigActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSigActionPerformed
+        if (estaReproduciendo != false) {
+            try {
+                reproductor.siguiente();
+            } catch (FileNotFoundException ex) {
+                Logger.getLogger(frmPlaylist.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }//GEN-LAST:event_btnSigActionPerformed
+
+    private void btnAnteriorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAnteriorActionPerformed
+        if (estaReproduciendo != false) {
+            try {
+                reproductor.anterior();
+            } catch (FileNotFoundException ex) {
+                Logger.getLogger(frmPlaylist.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }//GEN-LAST:event_btnAnteriorActionPerformed
 
     /**
      * @param args the command line arguments
@@ -194,12 +324,15 @@ public class frmPlaylist extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAgregar;
+    private javax.swing.JButton btnAnterior;
     private javax.swing.JButton btnEditar;
     private javax.swing.JButton btnEliminar;
-    private javax.swing.JButton btnReproducir;
-    private javax.swing.JList<String> jList1;
+    private javax.swing.JButton btnReproducir1;
+    private javax.swing.JButton btnSig;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JList<String> listaCanciones;
+    private javax.swing.JLabel nombreListatxt;
     private com.mycompany.listascapapresentacion.PanelRound panelRound1;
     // End of variables declaration//GEN-END:variables
 }

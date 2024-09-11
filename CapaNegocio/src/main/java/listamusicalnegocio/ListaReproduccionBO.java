@@ -28,18 +28,23 @@ public class ListaReproduccionBO implements IListaReproduccionBO {
         this.lista = lista;
     }
 
+    public ListaReproduccionBO() {
+        this.lista = new ListaReproduccionDAO();
+    }
+
     public ListaReproduccion BuscarLista(String nombreLista) throws Exception {
         ListaReproduccion lista1 = null;
         if (nombreLista != null) {
-            for (int i = 0; i < lista.consultarListasRep().size(); i++) {
-                if (lista.consultarListasRep().get(i).getNombreLista().equals(nombreLista)) {
-                    lista1 = lista.consultarListasRep().get(i);
+            if (lista.consultarListasRep() != null) {
+                for (int i = 0; i < lista.consultarListasRep().size(); i++) {
+                    if (lista.consultarListasRep().get(i).getNombreLista().equals(nombreLista)) {
+                        lista1 = lista.consultarListasRep().get(i);
+                    }
                 }
+                return lista1;
             }
-            return lista1;
-        } else {
-            return null;
         }
+        return null;
     }
 
     /**
@@ -87,7 +92,7 @@ public class ListaReproduccionBO implements IListaReproduccionBO {
 
     }
 
-   /**
+    /**
      * Elimina una canción de una lista de reproducción.
      *
      * @param nombreLista La lista de donde se quiere eliminar la cancion
@@ -118,15 +123,15 @@ public class ListaReproduccionBO implements IListaReproduccionBO {
      */
     @Override
     public ListaReproduccion crearListaReproduccion(ListaReproduccion listaCreada) throws Exception {
-        ListaReproduccion lista1 = null;
         if (listaCreada != null) {
             if (BuscarLista(listaCreada.getNombreLista()) == null) {
-                lista1 = lista.crearListaReproduccion(listaCreada);
+                lista.crearListaReproduccion(listaCreada);
+                return listaCreada;
+            } else {
+                throw new Exception("Ya existe una lista con ese nombre");
             }
-            return lista1;
-        } else {
-            throw new Exception("Ya existe una lista con ese nombre");
         }
+        return null;
     }
 
     /**

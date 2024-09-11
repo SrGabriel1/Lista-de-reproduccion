@@ -1,16 +1,34 @@
 package interfaz;
 
+import control.ControlListaReproduccion;
+import entidades.Cancion;
+import entidades.ListaReproduccion;
+import extras.CancionesListModel;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
+import listamusicalnegocio.CancionBO;
+import listamusicalnegocio.ICancionBO;
+
 /**
  *
  * @author adria
  */
 public class frmCanciones extends javax.swing.JFrame {
 
+    ControlListaReproduccion control;
+    ICancionBO canciones;
+
     /**
      * Creates new form frmCanciones
      */
     public frmCanciones() {
         initComponents();
+        control = ControlListaReproduccion.getInstancia();
+        canciones = new CancionBO();
+        llenarTabla();
     }
 
     /**
@@ -28,7 +46,7 @@ public class frmCanciones extends javax.swing.JFrame {
         btnAgregar = new javax.swing.JButton();
         panelRound1 = new com.mycompany.listascapapresentacion.PanelRound();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jList1 = new javax.swing.JList<>();
+        listaCanciones = new javax.swing.JList<>();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Agregar canciones");
@@ -41,7 +59,7 @@ public class frmCanciones extends javax.swing.JFrame {
         jLabel1.setText("Selección de canciones");
 
         btnAceptar.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        btnAceptar.setText("Aceptar");
+        btnAceptar.setText("Regresar");
         btnAceptar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         btnAceptar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -52,6 +70,11 @@ public class frmCanciones extends javax.swing.JFrame {
         btnAgregar.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         btnAgregar.setText("Agregar");
         btnAgregar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnAgregar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAgregarActionPerformed(evt);
+            }
+        });
 
         panelRound1.setBackground(new java.awt.Color(204, 204, 204));
         panelRound1.setRoundBottomLeft(10);
@@ -61,29 +84,24 @@ public class frmCanciones extends javax.swing.JFrame {
 
         jScrollPane1.setBackground(new java.awt.Color(204, 204, 204));
 
-        jList1.setBackground(new java.awt.Color(204, 204, 204));
-        jList1.setModel(new javax.swing.AbstractListModel<String>() {
-            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
-            public int getSize() { return strings.length; }
-            public String getElementAt(int i) { return strings[i]; }
-        });
-        jScrollPane1.setViewportView(jList1);
+        listaCanciones.setBackground(new java.awt.Color(204, 204, 204));
+        jScrollPane1.setViewportView(listaCanciones);
 
         javax.swing.GroupLayout panelRound1Layout = new javax.swing.GroupLayout(panelRound1);
         panelRound1.setLayout(panelRound1Layout);
         panelRound1Layout.setHorizontalGroup(
             panelRound1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelRound1Layout.createSequentialGroup()
-                .addGap(15, 15, 15)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 393, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(14, Short.MAX_VALUE))
+                .addGap(14, 14, 14)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 392, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(16, Short.MAX_VALUE))
         );
         panelRound1Layout.setVerticalGroup(
             panelRound1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panelRound1Layout.createSequentialGroup()
-                .addGap(14, 14, 14)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 267, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(31, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelRound1Layout.createSequentialGroup()
+                .addContainerGap(25, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 263, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(24, 24, 24))
         );
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -97,24 +115,25 @@ public class frmCanciones extends javax.swing.JFrame {
                         .addComponent(panelRound1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(27, 27, 27)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(btnAgregar)
-                            .addComponent(btnAceptar, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(btnAceptar, javax.swing.GroupLayout.DEFAULT_SIZE, 115, Short.MAX_VALUE)
+                            .addComponent(btnAgregar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                     .addComponent(jLabel1))
-                .addContainerGap(21, Short.MAX_VALUE))
+                .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addContainerGap(21, Short.MAX_VALUE)
                 .addComponent(jLabel1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 54, Short.MAX_VALUE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                         .addComponent(btnAgregar)
                         .addGap(18, 18, 18)
-                        .addComponent(btnAceptar))
-                    .addComponent(panelRound1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(34, 34, 34))
+                        .addComponent(btnAceptar)
+                        .addGap(34, 34, 34))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addComponent(panelRound1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(19, 19, 19))))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -132,9 +151,51 @@ public class frmCanciones extends javax.swing.JFrame {
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
+    private void llenarTabla() {
+
+        try {
+            List<Cancion> listaCancionesData = canciones.obtenerCanciones();
+            CancionesListModel listModel = new CancionesListModel(listaCancionesData);
+
+            listaCanciones.setModel(listModel);
+        } catch (Exception ex) {
+            Logger.getLogger(frmCanciones.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+    }
+
     private void btnAceptarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAceptarActionPerformed
-        // TODO add your handling code here:
+        control.mostrarPlaylist();
+        this.dispose();
     }//GEN-LAST:event_btnAceptarActionPerformed
+
+    private void btnAgregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarActionPerformed
+        int selectedIndex = listaCanciones.getSelectedIndex();
+
+        if (selectedIndex != -1) {
+            CancionesListModel listModel = (CancionesListModel) listaCanciones.getModel();
+            Cancion cancionSeleccionada = listModel.getCancionAt(selectedIndex);
+
+            List<Cancion> canciones = control.getListaRep().getListaMusica();
+
+            if (canciones == null) {
+                canciones = new ArrayList<>();
+            }
+
+            if (!canciones.contains(cancionSeleccionada)) {
+                canciones.add(cancionSeleccionada);
+                ListaReproduccion lr = control.getListaRep();
+                lr.setListaMusica(canciones);
+                control.setListaRep(lr);
+                control.mostrarPlaylist();
+                this.dispose();
+            } else {
+                JOptionPane.showMessageDialog(this, "La canción ya está en la lista.");
+            }
+        } else {
+            JOptionPane.showMessageDialog(this, "Por favor, selecciona una canción para agregar.");
+        }
+    }//GEN-LAST:event_btnAgregarActionPerformed
 
     /**
      * @param args the command line arguments
@@ -175,9 +236,9 @@ public class frmCanciones extends javax.swing.JFrame {
     private javax.swing.JButton btnAceptar;
     private javax.swing.JButton btnAgregar;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JList<String> jList1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JList<String> listaCanciones;
     private com.mycompany.listascapapresentacion.PanelRound panelRound1;
     // End of variables declaration//GEN-END:variables
 }
