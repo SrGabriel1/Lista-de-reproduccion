@@ -36,13 +36,17 @@ public class CancionDAO implements ICancion {
      */
     @Override
     public List<Cancion> buscarCancion(String nombre) {
-        List<Cancion> resultados = new ArrayList<>();
-        for (Cancion cancion : listaCanciones) {
-            if (cancion.getNombreCancion().toLowerCase().contains(nombre.toLowerCase())) {
-                resultados.add(cancion);
-            }
+    List<Cancion> resultados = new ArrayList<>();
+    String query = nombre.toLowerCase();
+    
+    for (Cancion cancion : listaCanciones) {
+        String nombreCancion = cancion.getNombreCancion().toLowerCase();
+ 
+        if (nombreCancion.contains(query)) {
+            resultados.add(cancion);
         }
-        return resultados;
+    }
+    return resultados;
     }
 
     /**
