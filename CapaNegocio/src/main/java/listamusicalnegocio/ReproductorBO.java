@@ -24,7 +24,6 @@ public class ReproductorBO {
 
     private int framePosition = 0;
 
-
     public ReproductorBO(List<Cancion> listaCanciones) {
         this.listaCanciones = listaCanciones;
     }
@@ -59,7 +58,6 @@ public class ReproductorBO {
                 }
             });
 
-
             hiloReproduccion = new Thread(() -> {
                 try {
                     player.play(framePosition, Integer.MAX_VALUE);
@@ -83,27 +81,15 @@ public class ReproductorBO {
                 System.out.println("Error al pausar: " + e.getMessage());
             }
 
-                // Correr en un hilo separado para permitir controlar la reproducción
-                hiloReproduccion = new Thread(() -> {
-                    try {
-                        player.play();
-                    } catch (JavaLayerException e) {
-                        System.out.println("Error al reproducir: " + e.getMessage());
-                    }
-                });
-                hiloReproduccion.start();
-
-            } catch (JavaLayerException e) {
-                System.out.println("Error al cargar el archivo MP3: " + e.getMessage());
-            }
-        }
-    }
-
-    // Método para pausar la canción
-    public void pausar() {
-        if (hiloReproduccion != null && player != null) {
-            enPausa = true;
-            hiloReproduccion.suspend();
+            // Correr en un hilo separado para permitir controlar la reproducción
+            hiloReproduccion = new Thread(() -> {
+                try {
+                    player.play();
+                } catch (JavaLayerException e) {
+                    System.out.println("Error al reproducir: " + e.getMessage());
+                }
+            });
+            hiloReproduccion.start();
 
         }
     }
@@ -166,4 +152,3 @@ public class ReproductorBO {
         return listaCanciones.get(indiceActual);
     }
 }
-
