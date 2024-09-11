@@ -1,3 +1,4 @@
+
 package listamusicalnegocio;
 
 import entidades.Cancion;
@@ -10,6 +11,9 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
 
 public class ReproductorBO {
 
@@ -21,7 +25,7 @@ public class ReproductorBO {
     private long pauseLocation = 0;
     private long songTotalLength = 0;
     private Thread hiloReproduccion;
-
+    private ExecutorService executorService;
     private int framePosition = 0;
 
     public ReproductorBO(List<Cancion> listaCanciones) {
@@ -57,20 +61,24 @@ public class ReproductorBO {
                     framePosition = evt.getFrame();
                 }
             });
-
-            hiloReproduccion = new Thread(() -> {
+            
+            // Usar ExecutorService en lugar de Thread
+            if (executorService == null || executorService.isShutdown()) {
+                executorService = Executors.newSingleThreadExecutor();
+            }
+            
+            executorService.submit(() -> {
                 try {
                     player.play(framePosition, Integer.MAX_VALUE);
                 } catch (JavaLayerException e) {
                     System.out.println("Error al reproducir: " + e.getMessage());
                 }
             });
-            hiloReproduccion.start();
+            
             enPausa = false;
         }
     }
-
-    public void pausar() throws IOException {
+public void pausar() throws IOException {
         if (player != null) {
             try {
                 pauseLocation = archivo.available();
@@ -81,18 +89,22 @@ public class ReproductorBO {
                 System.out.println("Error al pausar: " + e.getMessage());
             }
 
-            // Correr en un hilo separado para permitir controlar la reproducción
-            hiloReproduccion = new Thread(() -> {
+            // Enviar una tarea al ExecutorService para reanudar la reproducción
+            executorService.submit(() -> {
                 try {
                     player.play();
                 } catch (JavaLayerException e) {
                     System.out.println("Error al reproducir: " + e.getMessage());
                 }
             });
-            hiloReproduccion.start();
-
         }
     }
+    
+    // Asegúrate de cerrar el ExecutorService cuando ya no lo necesites
+    public void shutdown() {
+        executorService.shutdown();
+    }
+
 
     private void resumirCancion() throws FileNotFoundException, JavaLayerException, IOException {
         if (enPausa) {
