@@ -8,10 +8,12 @@ import daos.CancionDAO;
 import entidades.Cancion;
 import entidades.ListaReproduccion;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javazoom.jl.decoder.JavaLayerException;
 import listamusicalnegocio.ListaReproduccionBO;
 import listamusicalnegocio.ReproductorBO;
 
@@ -21,46 +23,37 @@ import listamusicalnegocio.ReproductorBO;
  */
 public class pruebas {
 
-    public static void main(String[] args) throws FileNotFoundException {
-//        // Crear algunas canciones de ejemplo
-        CancionDAO cancion = new CancionDAO();
-   
-        List<Cancion> listaCanciones = cancion.obtenerCanciones();
-////        for (Cancion c : cancion.obtenerCanciones()) {
-////            System.out.println(c.getNombreCancion());
-////            System.out.println(c.getDireccion());
-////        }
-     ReproductorBO reproductor = new ReproductorBO(listaCanciones);
+    public static void main(String[] args) throws FileNotFoundException, JavaLayerException, IOException {
+//       try {
+        // Crear algunas canciones de ejemplo
+        CancionDAO cancionDAO = new CancionDAO();
+        List<Cancion> listaCanciones = cancionDAO.obtenerCanciones();
+        ReproductorBO reproductor = new ReproductorBO(listaCanciones);
 
-       
+        // Reproducir la canción actual
+        System.out.println("Reproduciendo canción...");
         reproductor.reproducir();
-//       reproductor.siguiente();
-//         reproductor.siguiente();
-//         reproductor.siguiente();
-//         Pausar la canción
-//         reproductor.pausar();
-        // Reproducir la siguiente canción
-        // reproductor.siguiente();
-        // Reproducir la anterior canción
-        // reproductor.anterior();
-//        ListaReproduccionBO li=new ListaReproduccionBO();
-//        ListaReproduccion l=new ListaReproduccion();
-//        l.setNombreLista("ua");
-//           ListaReproduccion lq=new ListaReproduccion();
-//        lq.setNombreLista("ud");
-//        try {
-//            li.crearListaReproduccion(l);
-//            li.crearListaReproduccion(lq);
-//          
-//        } catch (Exception ex) {
-//            Logger.getLogger(pruebas.class.getName()).log(Level.SEVERE, null, ex);
-//        }
-//        try {
-//            for (ListaReproduccion d: li.consultarListasRep()) {
-//                System.out.println(d.getNombreLista());
-//            }
-//        } catch (Exception ex) {
-//            Logger.getLogger(pruebas.class.getName()).log(Level.SEVERE, null, ex);
-//        }
+        reproductor.siguiente();
+        // Esperar 3 segundos
+        try {
+            Thread.sleep(3000); // 3000 milisegundos = 3 segundos
+        } catch (InterruptedException e) {
+            System.out.println("La espera fue interrumpida: " + e.getMessage());
+        }
+
+        // Pausar la canción
+        System.out.println("Pausando canción...");
+        reproductor.pausar();
+
+        // Esperar un poco más para asegurarnos de que la pausa funcionó
+        try {
+            Thread.sleep(2000); // 2000 milisegundos = 2 segundos
+        } catch (InterruptedException e) {
+            System.out.println("La espera fue interrumpida: " + e.getMessage());
+        }
+        // Pausar la canción
+        System.out.println("Reproduciendo de nuevo la canción...");
+        reproductor.reproducir();
+        System.out.println("Prueba completada.");
     }
 }
